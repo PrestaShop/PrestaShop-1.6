@@ -1,0 +1,26 @@
+### NetBeans ###
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### Prestashop ###
+# Ignore everything in the root except modules, themes and override.
+/*
+!modules/
+!themes/
+!override/
+!.gitignore
+
+
+# Ignore everything in the modules directory, except the plugins you
+# specify (see the commented-out examples for hints on how to do this.)
+modules/*
+# !modules/my-directory-plugin/
+
+# Ignore everything in the "themes" directory, except the themes you
+# specify (see the commented-out example for a hint on how to do this.)
+themes/*
+!themes/coop-la-meute/
