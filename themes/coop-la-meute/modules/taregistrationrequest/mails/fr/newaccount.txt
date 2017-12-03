@@ -1,0 +1,2 @@
+Bonjour {firstname}, 
+Votre compte est créé, vous pouvez dés à présent vous connecter.
