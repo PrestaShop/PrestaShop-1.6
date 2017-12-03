@@ -176,7 +176,6 @@
 			</p>
 			{/if}
 			<!-- Nicolas MAURENT - 14.12.16 - Supplier info -->
-                        {debug}
                         {if $product->supplier_name}
 			<p id="product_supplier">
 				<a href="{$link->getsupplierLink($product_supplier)|escape:'htmlall':'UTF-8'}">
