@@ -151,12 +151,13 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="reference">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Your internal reference code for this product.'} {l s='Allowed special characters:'} .-_#\">
+			title="{l s='Your internal reference code for this product. Please refer to the nomenclature.'} {l s='Allowed special characters:'} .-_#\">
 				{$bullet_common_field} {l s='Reference code'}
 			</span>
 		</label>
 		<div class="col-lg-5">
 			<input type="text" id="reference" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
+                        <a class="" id="link-Nomenclature" href="https://drive.google.com/file/d/1DQA0LbkDxaTuApGAJ2OT7kcuyaWlzU5f/view" target="_blank">{l s='Nomenclature'}</a>
 		</div>
 	</div>
 
