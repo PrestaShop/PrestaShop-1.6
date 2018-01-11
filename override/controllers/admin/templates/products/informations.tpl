@@ -157,7 +157,9 @@
 		</label>
 		<div class="col-lg-5">
 			<input type="text" id="reference" name="reference" value="{$product->reference|htmlentitiesUTF8}" />
+                        {* Nicolas MAURENT - 10.01.18 - Added link to nomenclature of Product reference *}
                         <a class="" id="link-Nomenclature" href="https://drive.google.com/file/d/1DQA0LbkDxaTuApGAJ2OT7kcuyaWlzU5f/view" target="_blank">{l s='Nomenclature'}</a>
+                        {* -- *}
 		</div>
 	</div>
 
