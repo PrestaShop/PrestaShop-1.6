@@ -226,9 +226,11 @@ class AdminOrdersController extends AdminOrdersControllerCore
         }
       
         // Update product available quantity
-        // Nicolas MAURENT - 12.04.18 - Bug fix: Commented below action because quantity has already been decreased by cart->updateQty function above
+        // Nicolas MAURENT - 12.04.18 - Bug fix: Fix stock available after add product in order #8233
+        // Commented below action because quantity has already been decreased by cart->updateQty function above
         //StockAvailable::updateQuantity($order_detail->product_id, $order_detail->product_attribute_id, ($order_detail->product_quantity * -1), $order->id_shop);
-
+        // Nicolas MAURENT - 12.04.18 - end
+        
         // discount
         $order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
         $order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
