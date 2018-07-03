@@ -19,6 +19,7 @@ nbdist/
 # specify (see the commented-out examples for hints on how to do this.)
 modules/*
 # !modules/my-directory-plugin/
+!modules/makeprivateshop/
 
 # Ignore everything in the "themes" directory, except the themes you
 # specify (see the commented-out example for a hint on how to do this.)
