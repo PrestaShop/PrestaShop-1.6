@@ -540,7 +540,10 @@ class MakePrivateShop extends MakePrivateShopClass
 					Tools::redirect($url.'?back=index');
 				}
 
-				if ($conf['MPS_STATUT'] && $conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
+				// Nicolas MAURENT - 19.07.18 - Added center_column initialisation and Removed check on MPS_STATUS
+                                //if ($conf['MPS_STATUT'] && $conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
+                                $this->context->smarty->assign('center_column', false);
+                                if ($conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
 				{
 					$this->context->smarty->assign('content_only', 1);
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>makeprivateshop</name>
+	<displayName><![CDATA[Make your shop private]]></displayName>
+	<version><![CDATA[1.8.1]]></version>
+	<description><![CDATA[Only allow access to your store to customers]]></description>
+	<author><![CDATA[Mediacom87]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to delete your details ?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>
