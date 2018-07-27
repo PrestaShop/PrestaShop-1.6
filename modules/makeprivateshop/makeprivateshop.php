@@ -9,7 +9,9 @@ include_once('class/mediacom87.php');
 
 class MakePrivateShop extends MakePrivateShopClass
 {
-	public function __construct()
+        var $public_pages;
+	
+        public function __construct()
 	{
 		$this->name = 'makeprivateshop';
 		$this->tab = version_compare(_PS_VERSION_, '1.4.0.0', '>=') ? 'administration' : 'Mediacom87';
@@ -19,6 +21,29 @@ class MakePrivateShop extends MakePrivateShopClass
 		$this->module_key = '6bebd0c5695be29f1cb29301c68246a1';
 
 		parent::__construct();
+                
+                $this->public_pages = array(
+                        array(
+                            'id_page' => 'index',       // The concatenated value of the 'id' attribute of the <input> tag.
+                            'name' => $this->l('Index')    // The label with the <input> tag.
+                        ),
+                        array(
+                            'id_page' => 'category',
+                            'name' => $this->l('Category')
+                        ),
+                        array(
+                            'id_page' => 'product',
+                            'name' => $this->l('Product')
+                        ),
+                        array(
+                            'id_page' => 'supplier',
+                            'name' => $this->l('Supplier')
+                        ),
+                        array(
+                            'id_page' => 'contact',
+                            'name' => $this->l('Contact')
+                        )
+                );
 
 		/* boostrap */
 		if (version_compare(_PS_VERSION_, '1.6.0.0', '>='))
@@ -35,7 +60,8 @@ class MakePrivateShop extends MakePrivateShopClass
 		if (!parent::install()
 			|| !$this->registerHook('header')
 			|| !Configuration::updateValue('MPS_STATUT', 0)
-			|| !Configuration::updateValue('MPS_CONTENT', 0)
+			|| $this->installPublic()
+                        || !Configuration::updateValue('MPS_CONTENT', 0)
 			|| !Configuration::updateValue('MPS_CREATE', 1)
 			|| !Configuration::updateValue('MPS_LOGO', 1)
 			|| !Configuration::updateValue('MPS_TUNNEL', 0)
@@ -46,11 +72,21 @@ class MakePrivateShop extends MakePrivateShopClass
 			return false;
 		return true;
 	}
+        
+        private function installPublic()
+        {
+                $test = false;
+                foreach ($this->public_pages as $page) {
+                        $test = $test || !Configuration::updateValue('MPS_PUBLIC_'.strtoupper($page['id_page']), 0);
+                }
+                return $test;
+        }
 
 	public function uninstall()
 	{
 		if (!Configuration::deleteByName('MPS_STATUT')
-			|| !Configuration::deleteByName('MPS_CONTENT')
+			|| $this->uninstallPublic()
+                        || !Configuration::deleteByName('MPS_CONTENT')
 			|| !Configuration::deleteByName('MPS_CREATE')
 			|| !Configuration::deleteByName('MPS_LOGO')
 			|| !Configuration::deleteByName('MPS_TUNNEL')
@@ -62,6 +98,15 @@ class MakePrivateShop extends MakePrivateShopClass
 			return false;
 		return true;
 	}
+
+	private function uninstallPublic()
+        {
+                $test = false;
+                foreach ($this->public_pages as $page) {
+                        $test = $test || !Configuration::deleteByName('MPS_PUBLIC_'.strtoupper($page['id_page']));
+                }
+                return $test;
+        }
 
 	public function getContent($tab = 'AdminModules')
 	{
@@ -76,7 +121,10 @@ class MakePrivateShop extends MakePrivateShopClass
 		$token = Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$cookie->id_employee);
 		if (Tools::isSubmit('save'))
 		{
-			Configuration::updateValue('MPS_STATUT', (bool)Tools::getValue('MPS_STATUT'));
+                        Configuration::updateValue('MPS_STATUT', (bool)Tools::getValue('MPS_STATUT'));
+                        foreach ($this->public_pages as $page)
+                            Configuration::updateValue('MPS_PUBLIC_'.strtoupper($page['id_page']), (bool)Tools::getValue('public_pages_'.$page['id_page']));
+                                
 			Configuration::updateValue('MPS_BOT', (bool)Tools::getValue('MPS_BOT'));
 			Configuration::updateValue('MPS_CONTENT', (bool)Tools::getValue('MPS_CONTENT'));
 			Configuration::updateValue('MPS_CREATE', (bool)Tools::getValue('MPS_CREATE'));
@@ -281,171 +329,202 @@ class MakePrivateShop extends MakePrivateShopClass
 	public function renderFormCode()
 	{
 		$desc = (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'hint' : 'desc');
-		$fields_form = array(
-			'form' => array(
-				'input' => array(
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Privatize your store:'),
-						'name' => 'MPS_STATUT',
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Let work crawlers:'),
-						'name' => 'MPS_BOT',
-						$desc => $this->l('You can choose to make available your shop to crawlers in order to not to block SEO'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Content only:'),
-						'name' => 'MPS_CONTENT',
-						$desc => $this->l('Show only form authentication'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Create Account:'),
-						'name' => 'MPS_CREATE',
-						$desc => $this->l('Give or not, possibility to create an account'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Display logo:'),
-						'name' => 'MPS_LOGO',
-						$desc => $this->l('Show the logo when you choose Content only'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Hide order steps:'),
-						'name' => 'MPS_TUNNEL',
-						$desc => $this->l('Hide order steps when you choose Content only'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
-						'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
-						'label' => $this->l('Hide breadcrumb:'),
-						'name' => 'MPS_BREADCRUMB',
-						$desc => $this->l('Hide breadcrumb when you choose Content only'),
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
-							)
-						),
-					),
-					array(
-						'type' => 'text',
-						'label' => $this->l('Logo url:'),
-						'name' => 'MPS_URL',
-						$desc => $this->l('Leave blank if you want to use the default logo of your shop'),
-						'size' => '100%'
-					),
-					array(
-						'type' => 'text',
-						'label' => $this->l('Width for the page:'),
-						'name' => 'MPS_WIDTH',
-						$desc => $this->l('Define the width of your authenfication page. Often, this corresponds to the width used for the central column or large column of your template'),
-						'class' => 'fixed-width-md',
-						'suffix' => 'px',
-						'size' => '100%'
-					),
-				),
-
-				'submit' => array(
-					'title' => $this->l('Save'),
-					'class' => 'btn btn-default pull-left'
-					)
+                
+                $fields_form[0]['form'] = array(
+                        'legend' => array(
+				'title' => $this->l('Activation and Selection of public pages'),
+				'icon' => 'icon-list-alt'
 			),
+                        'input' => array(
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Privatize your store:'),
+                                        'name' => 'MPS_STATUT',
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type'    => 'checkbox',                   // This is an <input type="checkbox"> tag.
+                                        'label'   => $this->l('Public pages'),          // The <label> for this <input> tag.
+                                        'desc'    => $this->l('Select pages you want to keep public.'),  // A help text, displayed right next to the <input> tag.
+                                        'name'    => 'public_pages',                    // The content of the 'id' attribute of the <input> tag.
+                                        'values'  => array(
+                                                'query' => $this->public_pages,               // $options contains the data itself.
+                                                'id'    => 'id_page',                   // The value of the 'id' key must be the same as the key
+                                                                                        // for the 'value' attribute of the <option> tag in each $options sub-array.
+                                                'name'  => 'name',                      // The value of the 'name' key must be the same as the key
+                                                                                        // for the text content of the <option> tag in each $options sub-array.
+                                                'expand' => array(                      // 1.6-specific: you can hide the checkboxes when there are too many.
+                                                                                        // A button appears with the number of options it hides.
+                                                        'print_total' => count($this->public_pages),
+                                                        'default' => 'show',
+                                                        'show' => array('text' => $this->l('show'), 'icon' => 'plus-sign-alt'),
+                                                        'hide' => array('text' => $this->l('hide'), 'icon' => 'minus-sign-alt')
+                                                )
+                                        )
+                                )
+                        )
+                );
+                $fields_form[1]['form'] = array(
+                        'legend' => array(
+				'title' => $this->l('Customize the authentication page'),
+				'icon' => 'icon-list-alt'
+			),
+                        'input' => array(
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Let work crawlers:'),
+                                        'name' => 'MPS_BOT',
+                                        $desc => $this->l('You can choose to make available your shop to crawlers in order to not to block SEO'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Content only:'),
+                                        'name' => 'MPS_CONTENT',
+                                        $desc => $this->l('Show only form authentication'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Create Account:'),
+                                        'name' => 'MPS_CREATE',
+                                        $desc => $this->l('Give or not, possibility to create an account'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Display logo:'),
+                                        'name' => 'MPS_LOGO',
+                                        $desc => $this->l('Show the logo when you choose Content only'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Hide order steps:'),
+                                        'name' => 'MPS_TUNNEL',
+                                        $desc => $this->l('Hide order steps when you choose Content only'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? 'switch' : 'radio'),
+                                        'class' => (version_compare(_PS_VERSION_, '1.6.0.0', '>=') ? '' : 't'),
+                                        'label' => $this->l('Hide breadcrumb:'),
+                                        'name' => 'MPS_BREADCRUMB',
+                                        $desc => $this->l('Hide breadcrumb when you choose Content only'),
+                                        'is_bool' => true,
+                                        'values' => array(
+                                                array(
+                                                        'id' => 'active_on',
+                                                        'value' => 1,
+                                                        'label' => $this->l('Enabled')
+                                                ),
+                                                array(
+                                                        'id' => 'active_off',
+                                                        'value' => 0,
+                                                        'label' => $this->l('Disabled')
+                                                )
+                                        ),
+                                ),
+                                array(
+                                        'type' => 'text',
+                                        'label' => $this->l('Logo url:'),
+                                        'name' => 'MPS_URL',
+                                        $desc => $this->l('Leave blank if you want to use the default logo of your shop'),
+                                        'size' => '100%'
+                                ),
+                                array(
+                                        'type' => 'text',
+                                        'label' => $this->l('Width for the page:'),
+                                        'name' => 'MPS_WIDTH',
+                                        $desc => $this->l('Define the width of your authenfication page. Often, this corresponds to the width used for the central column or large column of your template'),
+                                        'class' => 'fixed-width-md',
+                                        'suffix' => 'px',
+                                        'size' => '100%'
+                                ),
+                        ),
+
+                        'submit' => array(
+                                'title' => $this->l('Save'),
+                                'class' => 'btn btn-default pull-left'
+                        )
 		);
 
 		$helper = new HelperForm();
@@ -474,8 +553,10 @@ class MakePrivateShop extends MakePrivateShopClass
 						'MPS_BOT'
 					))
 		);
-
-		return $helper->generateForm(array($fields_form));
+                foreach ($this->public_pages as $page)
+                        $helper->tpl_vars['fields_value']['public_pages_'.$page['id_page']] = Configuration::get('MPS_PUBLIC_'.strtoupper($page['id_page']));
+                        
+		return $helper->generateForm($fields_form);
 	}
 
 	public function hookHeader()
@@ -519,7 +600,8 @@ class MakePrivateShop extends MakePrivateShopClass
 			}
 			else
 			{
-				$conf = Configuration::getMultiple(array(
+                                // Nicolas MAURENT - 27.07.18 - Add public pages configuration load 
+                                $confKeys = array(
 						'MPS_STATUT',
 						'MPS_CONTENT',
 						'MPS_WIDTH',
@@ -528,22 +610,30 @@ class MakePrivateShop extends MakePrivateShopClass
 						'MPS_TUNNEL',
 						'MPS_BREADCRUMB',
 						'MPS_URL',
-						'MPS_URL'
-					));
+                                                'MPS_BOT'
+                                );
+                                foreach ($this->public_pages as $page)
+                                        array_push($confKeys, "MPS_PUBLIC_".strtoupper($page['id_page']));
+                                $conf = Configuration::getMultiple($confKeys);
 
 				$test = (($this->context->smarty->tpl_vars['page_name'] != 'authentication' && $this->context->smarty->tpl_vars['page_name'] != 'password') ? true : false);
 
-				if ($conf['MPS_STATUT'] && !$this->context->customer->isLogged() && $test && !Tools::isSubmit('SubmitCreate'))
+				// Nicolas MAURENT - 27.07.18 - Add a check on the pubic status of the page
+                                if ($conf['MPS_STATUT'] && !$this->context->customer->isLogged() && $test && !Tools::isSubmit('SubmitCreate'))
 				{
-					$link = new Link();
-					$url = $link->getPageLink('authentication');
-					Tools::redirect($url.'?back=index');
+					$configurationKey = 'MPS_PUBLIC_'.strtoupper($this->context->smarty->tpl_vars['page_name']);
+                                        if (!array_key_exists($configurationKey, $conf) || !$conf[$configurationKey]) {
+                                                $link = new Link();
+                                                $url = $link->getPageLink('authentication');
+                                                Tools::redirect($url.'?back=index');
+                                        }
 				}
 
-				// Nicolas MAURENT - 19.07.18 - Added center_column initialisation and Removed check on MPS_STATUS
-                                //if ($conf['MPS_STATUT'] && $conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
+                                // Nicolas MAURENT - 27.07.18 - Check on MPS_STATUS reinstated
+                                // Nicolas MAURENT - 19.07.18 - Added center_column initialisation
                                 $this->context->smarty->assign('center_column', false);
-                                if ($conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
+                                if ($conf['MPS_STATUT'] && $conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
+                                //if ($conf['MPS_CONTENT'] && !$this->context->customer->isLogged())
 				{
 					$this->context->smarty->assign('content_only', 1);
 
@@ -553,9 +643,10 @@ class MakePrivateShop extends MakePrivateShopClass
 
 				$test2 = (($this->context->smarty->tpl_vars['page_name'] == 'authentication' || $this->context->smarty->tpl_vars['page_name'] == 'password') ? true : false);
 
+                                // Nicolas MAURENT - 27.07.18 - Check on MPS_STATUS reinstated
                                 // Nicolas MAURENT - 03.07.18 - Removed check on MPS_STATUS to enable below settings even when MPS_STATUS is false
-                                //if ($conf['MPS_STATUT'] && !$this->context->customer->isLogged() && $test2)
-                                if (!$this->context->customer->isLogged() && $test2)
+                                if ($conf['MPS_STATUT'] && !$this->context->customer->isLogged() && $test2)
+                                //if (!$this->context->customer->isLogged() && $test2)
 				{
 					$this->context->smarty->assign(array(
 							'width' => $conf['MPS_WIDTH'],
