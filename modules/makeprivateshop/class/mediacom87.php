@@ -5,7 +5,9 @@
 */
 class MakePrivateShopClass extends Module
 {
-	/**
+	var $addons_id;
+    
+        /**
 	 * addJs function.
 	 *
 	 * @access protected
