@@ -2,9 +2,15 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_88fa71f0a6e0dfedbb46d91cc0b37a50'] = 'Index';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_3adbdb3ac060038aa0e6e6c138ef9873'] = 'Category';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_deb10517653c255364175796ace3553f'] = 'Product';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_ec136b444eede3bc85639fac0dd06229'] = 'Supplier';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_bbaff12800505b22a853e8b7f4eb6a22'] = 'Contact';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_72fe7c1bc25a6f56a78db6fc55d8d008'] = 'Privatisez votre boutique';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_c6f54057998b7387b94ac016b39cfd65'] = 'Ne permettez l\'accès à votre boutique qu\'aux clients, authentification obligatoire ou création de compte possible';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_fa214007826415a21a8456e3e09f999d'] = 'Êtes vous certains de vouloir effacer la configuration de ce module ?';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_254f642527b45bc260048e30704edb39'] = 'Configuration';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_fff6fc9cac62414eb40ec56b2c3ac354'] = 'Privatiser votre boutique';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_d17ffc985495f1efbda080b119da7666'] = 'Laisser travailler les robots d\'indexation :';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_3059775b38b6bc8c565c1427ed595b55'] = 'Vous pouvez choisir de rendre accessible votre boutique aux robots d\'indexation afin de ne pas bloquer le référencement';
@@ -25,8 +31,14 @@ $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_19634f0f71612bf2be7ea1c10
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_8f7f4c1ce7a4f933663d10543562b096'] = 'À propos';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_794df3791a8c800841516007427a2aa3'] = 'Licence';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_7daa1bee0dbcefe13624deb9d8e71c25'] = 'Activation et Sélection des pages publiques';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activer';
 $_MODULE['<{makeprivateshop}prestashop>makeprivateshop_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactiver';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_c3d3bc33c601ad4de340f69da8e74752'] = 'Pages publiques';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_4d38d522625842129ced7898583cc5c2'] = 'Sélectionnez les pages que vous souhaitez garder publiques.';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_a7dd12b1dab17d25467b0b0a4c8d4a92'] = 'monter';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_a88f05b6c963e145a45b58c47cd42a41'] = 'cacher';
+$_MODULE['<{makeprivateshop}prestashop>makeprivateshop_941ee0d473336341eb60e82747a2ecb4'] = 'Personnalisation de la page de connexion';
 $_MODULE['<{makeprivateshop}prestashop>mediacom87_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activer';
 $_MODULE['<{makeprivateshop}prestashop>mediacom87_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactiver';
 $_MODULE['<{makeprivateshop}prestashop>mediacom87_8f7f4c1ce7a4f933663d10543562b096'] = 'À propos';

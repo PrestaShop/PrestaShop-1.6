@@ -379,7 +379,7 @@ class MakePrivateShop extends MakePrivateShopClass
                 );
                 $fields_form[1]['form'] = array(
                         'legend' => array(
-				'title' => $this->l('Customize the authentication page'),
+				'title' => $this->l('Authentication page customization'),
 				'icon' => 'icon-list-alt'
 			),
                         'input' => array(
