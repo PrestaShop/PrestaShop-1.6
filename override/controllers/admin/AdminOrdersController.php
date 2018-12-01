@@ -12,6 +12,18 @@
  */
 class AdminOrdersController extends AdminOrdersControllerCore
 {
+    // Nicolas MAURENT - 01.12.18 - Override of orders.js
+    public function setMedia()
+    {
+        parent::setMedia();
+
+        if ($this->tabAccess['edit'] == 1 && $this->display == 'view') {
+            $this->removeJS(_PS_JS_DIR_.'admin/orders.js');
+            $this->addJS(_PS_JS_DIR_.'admin/override_orders.js');
+            //$this->addJS(__PS_BASE_URI__.'override/js/admin/orders.js');
+        }
+    }
+    
      public function ajaxProcessAddProductOnOrder()
     {
         // Load object

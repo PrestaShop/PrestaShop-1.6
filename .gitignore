@@ -11,6 +11,7 @@ nbdist/
 /*
 !modules/
 !themes/
+!js/
 !override/
 !.gitignore
 
@@ -25,3 +26,10 @@ modules/*
 # specify (see the commented-out example for a hint on how to do this.)
 themes/*
 !themes/coop-la-meute/
+
+# Ignore everything in the "js" directory, except the override files you
+# specify
+js/*
+!js/admin/
+js/admin/*
+!js/admin/override*
