@@ -16,7 +16,7 @@ class Product extends ProductCore
     * @param string $query Search query
     * @return array Matching products
     */
-    public static function searchByName($id_lang, $query, Context $context = null)
+    public static function searchByName($id_lang, $query, Context $context = null, $orderBy = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -39,7 +39,8 @@ class Product extends ProductCore
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
         // Nicolas MAURENT - 01.12.18 - Order by active (status) first
-        $sql->orderBy('p.`active` DESC, pl.`name` ASC');
+        // Nicolas MAURENT - 02.12.18 - Manage orderBy argument
+        $sql->orderBy(((!$orderBy) ? '' : $orderBy).'pl.`name` ASC');
 
         if (Combination::isFeatureActive()) {
             $where .= ' OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_attribute` `pa` WHERE pa.`id_product` = p.`id_product` AND (pa.`reference` LIKE \'%'.pSQL($query).'%\'
