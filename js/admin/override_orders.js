@@ -370,6 +370,8 @@ function init()
 				id_currency: id_currency,
 				id_address: id_address,
 				id_customer: id_customer,
+                                // Nicolas MAURENT - 02.12.18 - passing orderBy by active status as argument
+                                orderBy_active: 'DESC',
 				product_search: function() { return $('#add_product_product_name').val(); }
 			}
 		}

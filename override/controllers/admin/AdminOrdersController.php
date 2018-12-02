@@ -23,6 +23,91 @@ class AdminOrdersController extends AdminOrdersControllerCore
             //$this->addJS(__PS_BASE_URI__.'override/js/admin/orders.js');
         }
     }
+        
+    public function ajaxProcessSearchProducts()
+    {
+        Context::getContext()->customer = new Customer((int)Tools::getValue('id_customer'));
+        $currency = new Currency((int)Tools::getValue('id_currency'));
+        // Nicolas MAURENT - 02.12.18 - Pass orderBy argument and manage active status sorting
+        $orderBy = "";
+        $orderBy_active = (string)Tools::getValue('orderBy_active');
+        if($orderBy_active <> "")
+            $orderBy .= 'p.`active` '.$orderBy_active.', ';
+        if ($products = Product::searchByName((int)$this->context->language->id, pSQL(Tools::getValue('product_search')), null, $orderBy)) {
+        // Nicolas MAURENT - 02.12.18 - End
+            foreach ($products as &$product) {
+                // Formatted price
+                $product['formatted_price'] = Tools::displayPrice(Tools::convertPrice($product['price_tax_incl'], $currency), $currency);
+                // Concret price
+                $product['price_tax_incl'] = Tools::ps_round(Tools::convertPrice($product['price_tax_incl'], $currency), 2);
+                $product['price_tax_excl'] = Tools::ps_round(Tools::convertPrice($product['price_tax_excl'], $currency), 2);
+                $productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
+                $combinations = array();
+                $attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
+
+                // Tax rate for this customer
+                if (Tools::isSubmit('id_address')) {
+                    $product['tax_rate'] = $productObj->getTaxesRate(new Address(Tools::getValue('id_address')));
+                }
+
+                $product['warehouse_list'] = array();
+
+                foreach ($attributes as $attribute) {
+                    if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
+                        $combinations[$attribute['id_product_attribute']]['attributes'] = '';
+                    }
+                    $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
+                    $combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
+                    $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
+                    if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
+                        $price_tax_incl = Product::getPriceStatic((int)$product['id_product'], true, $attribute['id_product_attribute']);
+                        $price_tax_excl = Product::getPriceStatic((int)$product['id_product'], false, $attribute['id_product_attribute']);
+                        $combinations[$attribute['id_product_attribute']]['price_tax_incl'] = Tools::ps_round(Tools::convertPrice($price_tax_incl, $currency), 2);
+                        $combinations[$attribute['id_product_attribute']]['price_tax_excl'] = Tools::ps_round(Tools::convertPrice($price_tax_excl, $currency), 2);
+                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_excl, $currency), $currency);
+                    }
+                    if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock'])) {
+                        $combinations[$attribute['id_product_attribute']]['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->id);
+                    }
+
+                    if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['advanced_stock_management'] == 1) {
+                        $product['warehouse_list'][$attribute['id_product_attribute']] = Warehouse::getProductWarehouseList($product['id_product'], $attribute['id_product_attribute']);
+                    } else {
+                        $product['warehouse_list'][$attribute['id_product_attribute']] = array();
+                    }
+
+                    $product['stock'][$attribute['id_product_attribute']] = Product::getRealQuantity($product['id_product'], $attribute['id_product_attribute']);
+                }
+
+                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['advanced_stock_management'] == 1) {
+                    $product['warehouse_list'][0] = Warehouse::getProductWarehouseList($product['id_product']);
+                } else {
+                    $product['warehouse_list'][0] = array();
+                }
+
+                $product['stock'][0] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], 0, (int)$this->context->shop->id);
+
+                foreach ($combinations as &$combination) {
+                    $combination['attributes'] = rtrim($combination['attributes'], ' - ');
+                }
+                $product['combinations'] = $combinations;
+
+                if ($product['customizable']) {
+                    $product_instance = new Product((int)$product['id_product']);
+                    $product['customization_fields'] = $product_instance->getCustomizationFields($this->context->language->id);
+                }
+            }
+
+            $to_return = array(
+                'products' => $products,
+                'found' => true
+            );
+        } else {
+            $to_return = array('found' => false);
+        }
+
+        $this->content = Tools::jsonEncode($to_return);
+    }
     
      public function ajaxProcessAddProductOnOrder()
     {
