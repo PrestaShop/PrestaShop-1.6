@@ -73,7 +73,7 @@
 	<td align="center" class="titleblock" style="padding:7px 0">
 		<font size="2" face="Open-sans, sans-serif" color="#555454">
 			<span class="title" style="font-weight:500;font-size:28px;text-transform:uppercase;line-height:33px">Bonjour {firstname} {lastname},</span><br/>
-			<span class="subtitle" style="font-weight:500;font-size:16px;text-transform:uppercase;line-height:25px">Merci d'avoir effectué vos achats sur {shop_name}!</span>
+			<span class="subtitle" style="font-weight:500;font-size:16px;text-transform:uppercase;line-height:25px">Merci d'avoir effectué vos achats sur {shop_name} !</span>
 		</font>
 	</td>
 </tr>
@@ -302,9 +302,10 @@
 				<td style="padding:7px 0">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						<p data-html-only="1" style="border-bottom:1px solid #D6D4D4;margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;padding-bottom:10px">
-							Livraison						</p>
+							Adresse de livraison									</p>
 						<span style="color:#777">
-							<span style="color:#333"><strong>Adresse :</strong></span> <a href="https://goo.gl/maps/fegn2dYcCsK2" target="_blank">23 Route de la Marigarde 06130 Grasse</a><br /><br />
+							<!--Nicolas MAURENT - 11.01.19 - Using Smarty context to retrieve shop address-->
+                                                        <span style="color:#333"><strong>Adresse :</strong></span> <a href="https://goo.gl/maps/fegn2dYcCsK2" target="_blank">{shop_addr1} {shop_addr2} {shop_code} {shop_city}</a><br /><br />
 							<span style="color:#333"><strong>Localisation :</strong></span> <a href="https://goo.gl/maps/fegn2dYcCsK2">Afficher la carte</a>
 						</span>
 					</font>
@@ -321,26 +322,8 @@
 	<td style="padding:7px 0">
 		<table class="table" style="width:100%">
 			<tr>
-				<td class="box address" width="310" style="border:1px solid #D6D4D4;background-color:#f8f8f8;padding:7px 0">
-					<table class="table" style="width:100%">
-						<tr>
-							<td width="10" style="padding:7px 0">&nbsp;</td>
-							<td style="padding:7px 0">
-								<font size="2" face="Open-sans, sans-serif" color="#555454">
-									<p data-html-only="1" style="border-bottom:1px solid #D6D4D4;margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;padding-bottom:10px">
-										Adresse de livraison									</p>
-									<span data-html-only="1" style="color:#777">
-										{delivery_block_html}
-									</span>
-									
-								</font>
-							</td>
-							<td width="10" style="padding:7px 0">&nbsp;</td>
-						</tr>
-					</table>
-				</td>
-				<td width="20" class="space_address" style="padding:7px 0">&nbsp;</td>
-				<td class="box address" width="310" style="border:1px solid #D6D4D4;background-color:#f8f8f8;padding:7px 0">
+				<!--Nicolas MAURENT - 11.01.19 - Removed delivery_block block-->
+                                <td class="box address" width="310" style="border:1px solid #D6D4D4;background-color:#f8f8f8;padding:7px 0">
 					<table class="table" style="width:100%">
 						<tr>
 							<td width="10" style="padding:7px 0">&nbsp;</td>

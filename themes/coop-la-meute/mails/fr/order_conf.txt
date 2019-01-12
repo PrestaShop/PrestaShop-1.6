@@ -2,7 +2,7 @@
 
 Bonjour {firstname} {lastname},
 
-Merci d'avoir effectué vos achats sur {shop_name}! 
+Merci d'avoir effectué vos achats sur {shop_name} ! 
 
 COMMANDE : {order_name} Date {date}
 
@@ -50,9 +50,9 @@ TRANSPORTEUR : {carrier}
 
 PAIEMENT : {payment} 		 
 
-{delivery_block_txt} 
+LIVRAISON : {shop_addr1} {shop_addr2} {shop_code} {shop_city} 
 
-{invoice_block_txt} 
+FACTURATION : {invoice_block_txt} 
 
 Vous pouvez accéder à tout moment au suivi de votre commande et
 télécharger votre facture dans "Historique des commandes"
