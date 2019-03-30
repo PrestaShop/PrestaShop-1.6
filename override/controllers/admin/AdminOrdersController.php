@@ -450,4 +450,39 @@ class AdminOrdersController extends AdminOrdersControllerCore
             'refresh' => $refresh
         )));
     }
+    
+    // Nicolas MAURENT - 30.03.19 - Fix payment method change when in catalogue mode
+    public function ajaxProcessChangePaymentMethod()
+    {
+        $customer = new Customer(Tools::getValue('id_customer'));
+        $modules = Module::getAuthorizedModules($customer->id_default_group);
+        $authorized_modules = array();
+
+        if (!Validate::isLoadedObject($customer) || !is_array($modules)) {
+            die(Tools::jsonEncode(array('result' => false)));
+        }
+
+        foreach ($modules as $module) {
+            $authorized_modules[] = (int)$module['id_module'];
+        }
+
+        $payment_modules = array();
+
+        foreach (PaymentModule::getInstalledPaymentModules() as $p_module) {
+            if (in_array((int)$p_module['id_module'], $authorized_modules)) {
+                $payment_modules[] = Module::getInstanceById((int)$p_module['id_module']);
+            }
+        }
+
+        $this->context->smarty->assign(array(
+            'payment_modules' => $payment_modules,
+            // Nicolas MAURENT - 30.03.19 - Ensure to load PS_CATALOG_MODE in smarty context
+            'PS_CATALOG_MODE' => Configuration::get('PS_CATALOG_MODE')
+        ));
+
+        die(Tools::jsonEncode(array(
+            'result' => true,
+            'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
+        )));
+    }
 }
