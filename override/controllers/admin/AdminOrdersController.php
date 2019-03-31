@@ -698,7 +698,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
         } elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) &&
             ($module_name = Tools::getValue('payment_module_name')) &&
             ($id_order_state = Tools::getValue('id_order_state')) &&
-            (Validate::isModuleName($module_name)or Configuration::get('PS_CATALOG_MODE')) ) {
+            // Add OR condition with PS_CATALOG_MODE
+            (Validate::isModuleName($module_name) or Configuration::get('PS_CATALOG_MODE')) ) {
             if ($this->tabAccess['edit'] === '1') {
                 if (!Configuration::get('PS_CATALOG_MODE')) {
                     $payment_module = Module::getInstanceByName($module_name);
