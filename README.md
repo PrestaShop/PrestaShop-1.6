@@ -29,6 +29,8 @@ However, there is still shops in this version, and a few interested volunteers f
 - Security issues
 - Supporting PHP 7.2
 
+When the volunteers will consider that a patch version is needed, a release will be built and be made available on GitHub only. Those eventual releases will not be available on the PrestaShop company website. This is a pure community initiative.
+
 All issues and pull requests that are not in this list will be closed.
 
 For more details, please read the [1.6.1.X: What’s Next][4] article.
