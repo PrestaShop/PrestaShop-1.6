@@ -93,8 +93,13 @@ function showOrder(mode, var_content, file)
 					return sendOrderMessage();
 			});
 			$(this).fadeIn('slow', function() {
-				$.scrollTo(this, 1200);
-			});
+				// Nicolas MAURENT - 14.11.19 - Fixing scrolling to order detail for click on detail button
+                                //$.scrollTo(this, 1200);
+                                $('html, body').animate({
+                                    scrollTop: $("#block-order-detail").offset().top
+                                }, 500);
+                                // Nicolas MAURENT - 14.11.19 - End
+			});                        
 		});
 	});
 }
