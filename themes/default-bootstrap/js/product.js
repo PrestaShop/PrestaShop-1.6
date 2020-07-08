@@ -106,8 +106,10 @@ if (typeof combinations !== 'undefined' && combinations)
 		combinationsJS[k]['reduction_type'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction_type']) ? combinations[i]['specific_price']['reduction_type'] : '';
 		combinationsJS[k]['id_product_attribute'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['id_product_attribute']) ? combinations[i]['specific_price']['id_product_attribute'] : 0;
 
-		var key = combinationsJS[k]['idsAttributes'].sort().join('-');
-		combinationsHashSet[key] = combinationsJS[k];
+		if (typeof combinationsJS[k]['idsAttributes'] !== 'undefined') {
+			var key = combinationsJS[k]['idsAttributes'].sort().join('-');
+			combinationsHashSet[key] = combinationsJS[k];
+		}
 
 		k++;
 	}
