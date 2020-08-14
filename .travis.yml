@@ -44,5 +44,5 @@ script:
   - bash travis-scripts/install-prestashop.sh
   - cd tests && bash getcomposer.sh && php composer.phar install
   - phpunit --version
-  - php phpunit -c .
+  - phpunit -c .
   - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh
