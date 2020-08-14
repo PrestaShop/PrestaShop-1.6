@@ -40,5 +40,6 @@ before_script:
 script:
   - tests/check_php_parse_errors.sh
   - bash travis-scripts/install-prestashop.sh
-  - cd tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c tests/
+  - cd tests && bash getcomposer.sh && php composer.phar install
+  - php vendor/bin/phpunit -c .
   - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh
