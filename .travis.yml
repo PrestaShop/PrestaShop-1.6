@@ -37,9 +37,14 @@ before_script:
   - bash travis-scripts/setup-apache.sh
   - bash travis-scripts/setup-selenium.sh
 
+install:
+  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then wget -O ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit https://phar.phpunit.de/phpunit-7.phar; fi
+  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then chmod 755 ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit; fi
+
 script:
   - tests/check_php_parse_errors.sh
   - bash travis-scripts/install-prestashop.sh
   - cd tests && bash getcomposer.sh && php composer.phar install
-  - php vendor/bin/phpunit -c .
+  - phpunit --version
+  - phpunit -c .
   - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh
