@@ -61,7 +61,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     protected $id_shop = null;
 
     /** @var array|null List of shop IDs */
-    public $id_shop_list = null;
+    public $id_shop_list = array();
 
     /** @var bool */
     protected $get_shop_from_context = true;

@@ -2074,7 +2074,7 @@ class ToolsCore
         if ($stream_context == null && !$is_local_file) {
             $stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout), 'ssl' => array('verify_peer' => true)));
         }
-    
+
         if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || $is_local_file) {
             $content = @file_get_contents($url, $use_include_path, $stream_context);
             if (!in_array($content, array('', false)) || $is_local_file || !$fallback) {
@@ -2148,7 +2148,7 @@ class ToolsCore
         if ($catapitalise_first_char) {
             $str = Tools::ucfirst($str);
         }
-        return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
+        return preg_replace_callback('/_+([a-z])/', function($c) { return strtoupper($c[1]);}, $str);
     }
 
     /**
