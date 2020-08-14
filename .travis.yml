@@ -43,7 +43,6 @@ script:
   - tests/check_php_parse_errors.sh
   - bash travis-scripts/install-prestashop.sh
   - cd tests && bash getcomposer.sh && php composer.phar install
-  - if [[ $TRAVIS_PHP_VERSION <= '7.1' ]]; then php vendor/bin/phpunit -c .
-  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then phpunit --version
-  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then php phpunit -c .
+  - phpunit --version
+  - php phpunit -c .
   - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh
