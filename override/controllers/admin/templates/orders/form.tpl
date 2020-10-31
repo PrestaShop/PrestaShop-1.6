@@ -653,7 +653,11 @@
 					attributes_html += '<label class="control-label col-lg-3">{l s='Combination'}</label><div class="col-lg-6">';
 					$.each(res.products, function() {
 						{* Nicolas MAURENT - 01.12.18 - Enrich name with deactivation status and stock value *}
-                                                products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+(this.active == "0" ? '-----DÉSACTIVÉ: ' : '')+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+' [Stock='+this.stock[0]+']</option>';
+                                                {* Nicolas MAURENT - 16.11.19 - Check product is available for order *}
+                                                if (this.available_for_order == '1')
+                                                {* Nicolas MAURENT - 16.11.19 - End *}
+                                                    products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+(this.active == "0" ? '-----DÉSACTIVÉ: ' : '')+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+' [Stock='+this.stock[0]+']</option>';
+                                                {* Nicolas MAURENT - 01.12.18 - End *}
                                                 attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();

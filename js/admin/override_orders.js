@@ -357,8 +357,11 @@ function init()
                                             var name = data.products[i].name;
                                             if (data.products[i].active == "0")
                                                 name = "-----DÉSACTIVÉ: "+name;
-                                            products[i] = { data: data.products[i], value: name+" [Stock="+data.products[i].stock[0]+"]" };
-                                            // Nicolas MAURENT - 01.12.18 - end
+                                            // Nicolas MAURENT - 16.11.19 - Only return products available for order
+                                            if (data.products[i].available_for_order == '1')
+                                                products.push({ data: data.products[i], value: name+" [Stock="+data.products[i].stock[0]+"]" });
+                                            // Nicolas MAURENT - 16.11.19 - End
+                                            // Nicolas MAURENT - 01.12.18 - end                                             
                                         }
                                     return products;
 			},
