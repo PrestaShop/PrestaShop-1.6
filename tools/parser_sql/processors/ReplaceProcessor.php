@@ -41,7 +41,8 @@ require_once(dirname(__FILE__) . '/InsertProcessor.php');
  */
 class ReplaceProcessor extends InsertProcessor {
 
-    public function process($tokenList) {
+    // Nicolas MAURENT - 01.11.20 - Function definition aligned on parent as required by php7.3
+	public function process($tokenList, $token_category = 'REPLACE') {
         return parent::process($tokenList, 'REPLACE');
     }
 

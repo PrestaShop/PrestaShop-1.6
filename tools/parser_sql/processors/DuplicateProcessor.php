@@ -41,7 +41,8 @@ require_once(dirname(__FILE__) . '/SetProcessor.php');
  */
 class DuplicateProcessor extends SetProcessor {
 
-    public function process($tokens) {
+    // Nicolas MAURENT - 01.11.20 - Function definition aligned on parent as required by php7.3
+	public function process($tokens, $isUpdate = false) {
         return parent::process($tokens, false);
     }
 
