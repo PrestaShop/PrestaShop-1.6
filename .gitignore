@@ -6,30 +6,56 @@ dist/
 nbdist/
 .nb-gradle/
 
+# Editors, tools and OS's
+.buildpath
+.htaccess
+.project
+.settings
+.idea
+.svn
+.DS_Store
+.sass-cache
+config.codekit
+*.sublime-project
+*.sublime-workspace
+nbproject
+bower_components
+composer.lock
+
 ### Prestashop ###
-# Ignore everything in the root except modules, themes and override.
-/*
-!modules/
-!themes/
-!js/
-!override/
-!.gitignore
 
+# Cache, temp and personal files
+cache/*
+download/*
+img/*
+log/*
+upload/*
+vendor/*
 
-# Ignore everything in the modules directory, except the plugins you
-# specify (see the commented-out examples for hints on how to do this.)
-modules/*
-# !modules/my-directory-plugin/
-!modules/makeprivateshop/
+admin9757ogwpm/autoupgrade/*
+admin9757ogwpm/backups/*
+admin9757ogwpm/import/*
 
-# Ignore everything in the "themes" directory, except the themes you
-# specify (see the commented-out example for a hint on how to do this.)
+themes/*/cache/*
+admin9757ogwpm/themes/*/cache/*
+
+# Config
+config/settings.inc.php
+config/settings.old.php
+config/xml/*
+!config/xml/themes/default.xml
+
+# Themes and modules
 themes/*
 !themes/coop-la-meute/
+modules/*
+!modules/makeprivateshop/
 
-# Ignore everything in the "js" directory, except the override files you
-# specify
-js/*
-!js/admin/
-js/admin/*
-!js/admin/override*
+# Translations and emails templates
+translations/*
+mails/*
+!mails/fr/
+
+# MISC
+*sitemap.xml
+robots.txt
