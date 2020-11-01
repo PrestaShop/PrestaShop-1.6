@@ -150,7 +150,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
                     }
                     foreach ($rules['validate'] as $field => $function) {
                         if (Tools::getValue($field)) {
-                            if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
+                            // Nicolas MAURENT - 01.11.20 - Official Prestashop1.6 branch fix
+							if (!Validate::{$function}(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
                                 $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $field);
                             }
                         }

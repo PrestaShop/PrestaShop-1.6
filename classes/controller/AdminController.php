@@ -546,7 +546,7 @@ class AdminControllerCore extends Controller
      * @param int|null $tab_id
      * @param array|null $tabs
      */
-    public function initBreadcrumbs($tab_id = null, $tabs = null)
+    public function initBreadcrumbs($tab_id = null, $tabs = array())
     {
         if (is_array($tabs) || count($tabs)) {
             $tabs = array();
@@ -2326,7 +2326,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if ($this->getModulesList($this->filter_modules_list)) {
+        if ($this->filter_modules_list && $this->getModulesList($this->filter_modules_list)) {
             $tmp = array();
             foreach ($this->modules_list as $key => $module) {
                 if ($module->active) {
@@ -3464,9 +3464,9 @@ class AdminControllerCore extends Controller
                 foreach ($languages as $language) {
                     if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value)) {
                         if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME')) {
-                            $res = Validate::$function($value, true);
+                            $res = Validate::{$function}($value, true);
                         } else {
-                            $res = Validate::$function($value);
+                            $res = Validate::{$function}($value);
                         }
                         if (!$res) {
                             $this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(

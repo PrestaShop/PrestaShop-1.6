@@ -586,7 +586,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
                     foreach ($rules['validate'] as $field => $function) {
                         if (Tools::getValue($field)) {
-                            if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
+                            if (!Validate::{$function}(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
                                 $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $field);
                             }
                         }
@@ -2108,7 +2108,7 @@ class AdminOrdersControllerCore extends AdminController
             $order->total_shipping_tax_incl = $order_invoice->total_shipping_tax_incl;
             $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
         }
-        
+
         // discount
         $order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
         $order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
