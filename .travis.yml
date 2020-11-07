@@ -1,0 +1,48 @@
+language: php
+
+sudo: required
+dist: trusty
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+
+before_install:
+  - sudo apt-get update
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 7.0
+
+addons:
+  chrome: stable
+  apt:
+    packages:
+      - apache2
+      - libapache2-mod-fastcgi
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.npm
+
+before_script:
+  - bash travis-scripts/setup-php-fpm.sh
+  - bash travis-scripts/setup-apache.sh
+  - bash travis-scripts/setup-selenium.sh
+
+install:
+  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then wget -O ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit https://phar.phpunit.de/phpunit-7.phar; fi
+  - if [[ $TRAVIS_PHP_VERSION > '7.1' ]]; then chmod 755 ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit; fi
+
+script:
+  - tests/check_php_parse_errors.sh
+  - bash travis-scripts/install-prestashop.sh
+  - cd tests && bash getcomposer.sh && php composer.phar install
+  - phpunit --version
+  - phpunit -c .
+  - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh

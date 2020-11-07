@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### NetBeans ###
 nbproject/
 build/
@@ -59,3 +60,74 @@ mails/*
 # MISC
 *sitemap.xml
 robots.txt
+=======
+
+# Editors, tools and OS's
+
+.buildpath
+.htaccess
+.project
+.settings
+.idea
+.svn
+.DS_Store
+.sass-cache
+config.codekit
+*.sublime-project
+*.sublime-workspace
+nbproject
+bower_components
+composer.lock
+
+# Cache, temp and personal files
+
+cache/*
+download/*
+img/*
+log/*
+upload/*
+vendor/*
+
+admin-dev/autoupgrade/*
+admin-dev/backups/*
+admin-dev/import/*
+
+themes/*/cache/*
+admin-dev/themes/*/cache/*
+
+# Config
+
+config/settings.inc.php
+config/settings.old.php
+config/xml/*
+!config/xml/themes/default.xml
+
+# Themes, modules and overrides
+
+modules/*
+override/*
+
+admin-dev/themes/default/sass/ie.sass
+admin-dev/themes/default/sass/print.sass
+admin-dev/themes/default/sass/screen.sass
+admin-dev/themes/default/css/ie.css
+admin-dev/themes/default/css/print.css
+admin-dev/themes/default/css/screen.css
+
+# Translations and emails templates
+
+translations/*
+mails/*
+!mails/en/
+themes/default-bootstrap/lang/*
+themes/default-bootstrap/modules/*/translations/*.php
+themes/default-bootstrap/mails/*
+!themes/default-bootstrap/mails/en/
+themes/default-bootstrap/modules/*/mails/*
+!themes/default-bootstrap/modules/*/mails/en
+
+# MISC
+
+*sitemap.xml
+robots.txt
+>>>>>>> origin/master

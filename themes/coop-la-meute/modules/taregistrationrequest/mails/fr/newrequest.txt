@@ -1,2 +1,0 @@
-{firstname} {lastname} vient de réaliser une demande d'inscription. 
-Vous pouvez valider la demande d'inscription depuis votre backoffice. 
