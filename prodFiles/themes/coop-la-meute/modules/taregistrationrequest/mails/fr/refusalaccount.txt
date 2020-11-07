@@ -1,5 +1,0 @@
-Bonjour {firstname},
-Nous n'avons pu valider votre inscription pour le motif suivant :
-{refusal_reason}
-												
-
