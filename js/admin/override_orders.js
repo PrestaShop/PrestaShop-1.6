@@ -340,7 +340,7 @@ function init()
 		{
 			minChars: 3,
 			// Nicolas MAURENT - 01.12.18 - Increase lenght of dropdown list because of many deactivated products
-                        max: 20,
+      max: 20,
 			width: 500,
 			selectFirst: false,
 			scroll: false,
@@ -353,17 +353,17 @@ function init()
 				var products = new Array();
 				if (typeof(data.products) != 'undefined')
 					for (var i = 0; i < data.products.length; i++) {
-                                            // Nicolas MAURENT - 01.12.18 - Adding deactivation status to the name of the product when displaying into add_product_product_name
-                                            var name = data.products[i].name;
-                                            if (data.products[i].active == "0")
-                                                name = "-----DÉSACTIVÉ: "+name;
-                                            // Nicolas MAURENT - 16.11.19 - Only return products available for order
-                                            if (data.products[i].available_for_order == '1')
-                                                products.push({ data: data.products[i], value: name+" [Stock="+data.products[i].stock[0]+"]" });
-                                            // Nicolas MAURENT - 16.11.19 - End
-                                            // Nicolas MAURENT - 01.12.18 - end                                             
-                                        }
-                                    return products;
+            // Nicolas MAURENT - 01.12.18 - Adding deactivation status to the name of the product when displaying into add_product_product_name
+            var name = data.products[i].name;
+            if (data.products[i].active == "0")
+                name = "-----DÉSACTIVÉ: "+name;
+            // Nicolas MAURENT - 16.11.19 - Only return products available for order
+            if (data.products[i].available_for_order == '1')
+                products.push({ data: data.products[i], value: name+" [Stock="+data.products[i].stock[0]+"]" });
+            // Nicolas MAURENT - 16.11.19 - End
+            // Nicolas MAURENT - 01.12.18 - end
+          }
+        return products;
 			},
 			extraParams: {
 				ajax: true,
@@ -373,8 +373,8 @@ function init()
 				id_currency: id_currency,
 				id_address: id_address,
 				id_customer: id_customer,
-                                // Nicolas MAURENT - 02.12.18 - passing orderBy by active status as argument
-                                orderBy_active: 'DESC',
+        // Nicolas MAURENT - 02.12.18 - passing orderBy by active status as argument
+        orderBy_active: 'DESC',
 				product_search: function() { return $('#add_product_product_name').val(); }
 			}
 		}
@@ -721,6 +721,10 @@ function init()
 
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
+
+						// Nicolas MAURENT - 02.01.20 - Show Add product/voucher buttons
+						$('.order_action').show();
+
 						$('.add_product_fields').hide();
 						$('.row-editing-warning').hide();
 						$('td.product_action').attr('colspan', 3);
