@@ -293,6 +293,16 @@ function closeAddProduct()
 	current_product = null;
 }
 
+// Nicolas MAURENT - 02.01.21 - Detect Enter and trigger click on button
+function routeClickForEnterEvent(event, element, button)
+{
+	var keyPressed = event.keyCode || event.which;
+	if (keyPressed === 13) {
+		element.closest('tr').find(button).click();
+		event.preventDefault();
+		return false;
+	}
+}
 
 
 /**
@@ -346,7 +356,7 @@ function init()
 			scroll: false,
 			dataType: "json",
 			highlightItem: true,
-                        formatItem: function(data, i, max, value, term) {
+      formatItem: function(data, i, max, value, term) {
 				return value;
 			},
 			parse: function(data) {
@@ -477,7 +487,8 @@ function init()
 			go = false;
 		}
 
-		if ($('input#add_product_product_price_excl').val() == 0)
+		// Nicolas MAURENT - 02.01.21 - Fix wrong variable name
+		if ($('input#add_product_product_price_tax_excl').val() == 0)
 		{
 			jAlert(txt_add_product_no_product_price);
 			go = false;
@@ -564,6 +575,11 @@ function init()
 			$('#new_invoice').slideDown('slow');
 		else
 			$('#new_invoice').slideUp('slow');
+	});
+
+	// Nicolas MAURENT - 02.01.21 - Detect Enter and click #submitAddProduct
+  $('#add_product_product_name, #add_product_product_price_tax_excl, #add_product_product_price_tax_incl, #add_product_product_quantity').off('keydown.enter').on('keydown.enter', function (e) {
+    routeClickForEnterEvent(e, $(this), '#submitAddProduct');
 	});
 
 	$('#add_product_product_price_tax_excl').unbind('keyup').keyup(function() {
@@ -737,6 +753,11 @@ function init()
 
 		return false;
 	});
+
+	// Nicolas MAURENT - 02.01.21 - Detect Enter and click button.submitProductChange
+	  $('.edit_product_price_tax_excl, .edit_product_price_tax_incl, .edit_product_quantity').off('keydown.enter').on('keydown.enter', function (e) {
+	    routeClickForEnterEvent(e, $(this), 'button.submitProductChange');
+	  });
 
 	$('.edit_product_price_tax_excl').unbind('keyup').keyup(function() {
 		var price_tax_excl = parseFloat($(this).val());
