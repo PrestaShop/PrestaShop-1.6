@@ -722,7 +722,7 @@ function init()
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
 
-						// Nicolas MAURENT - 02.01.20 - Show Add product/voucher buttons
+						// Nicolas MAURENT - 02.01.21 - Show Add product/voucher buttons
 						$('.order_action').show();
 
 						$('.add_product_fields').hide();
