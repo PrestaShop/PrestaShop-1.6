@@ -28,6 +28,10 @@
 {if !isset($errors) OR !sizeof($errors)}
 	<h1 class="page-heading product-listing">
 		{l s='List of products by supplier:'}&nbsp;{$supplier->name|escape:'html':'UTF-8'}
+		<!-- Nicolas MAURENT - 23.01.21 - Product manager info stored in meta_description -->
+		{if !empty($supplier->meta_description)}
+			</br>[{$supplier->meta_description|escape:'html':'UTF-8'}]
+		{/if}
 	</h1>
 	{if !empty($supplier->description)}
 		<div class="description_box rte">
