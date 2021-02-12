@@ -266,7 +266,7 @@ class OrderSlipCore extends ObjectModel
 
     public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false, $add_tax = true)
     {
-        $currency = new Currency((int)$order->id_currency);
+        $currency = new Currency((int)$order->id_currency, null, (int)$order->id_shop);
         $order_slip = new OrderSlip();
         $order_slip->id_customer = (int)$order->id_customer;
         $order_slip->id_order = (int)$order->id;
@@ -420,7 +420,7 @@ class OrderSlipCore extends ObjectModel
 
     public static function createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list)
     {
-        $currency = new Currency($order->id_currency);
+        $currency = new Currency($order->id_currency, null, (int)$order->id_shop);
         $orderSlip = new OrderSlip();
         $orderSlip->id_customer = (int)$order->id_customer;
         $orderSlip->id_order = (int)$order->id;
