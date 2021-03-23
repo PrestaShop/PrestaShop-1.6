@@ -69,7 +69,7 @@ class BlowfishCore extends Crypt_Blowfish
 
     public function maxi_pad($plaintext)
     {
-        $str_len = count($plaintext);
+        $str_len = is_array($plaintext) ? count($plaintext) : 0;
         $pad_len = $str_len % 8;
         for ($x = 0; $x < $pad_len; $x++) {
             $plaintext = $plaintext.' ';
