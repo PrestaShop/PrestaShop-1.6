@@ -15,8 +15,8 @@ class AdminProductsController extends AdminProductsControllerCore
     public function __construct()
     {
 		parent::__construct();
-		
-		// Nicolas MAURENT - 28.10.17 - Retrieving supplier with join and select 
+
+		// Nicolas MAURENT - 28.10.17 - Retrieving supplier with join and select
 		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'supplier` supp ON (supp.id_supplier = a.`id_supplier`)';
 		$this->_select .= ', supp.`name` AS `supp`';
 
@@ -33,7 +33,7 @@ class AdminProductsController extends AdminProductsControllerCore
 			array_slice($this->fields_list,$image_offset-1)
 		);
     }
-    
+
     public function processDuplicate()
     {
         if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
@@ -86,7 +86,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
     }
-	
+
     public function processUpdate()
     {
         $existing_product = $this->object;
@@ -146,14 +146,14 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
 
                     PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
-					
+
                     // Nicolas MAURENT - 28.10.17 - Added logging of status change for a product
                     if((int)$this->object->active == 1 && (int)$existing_product->active == 0)
                             PrestaShopLogger::addLog($this->l('Enabling', 'AdminTab', false, false), 1, null, get_class($object), (int)$id, true, (int)$this->context->employee->id);
                     elseif((int)$this->object->active == 0 && (int)$existing_product->active == 1)
                             PrestaShopLogger::addLog($this->l('Disabling', 'AdminTab', false, false), 1, null, get_class($object), (int)$id, true, (int)$this->context->employee->id);
                     // Nicolas MAURENT - 28.10.17 - End
-				
+
                     if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL))) {
                         if ($this->isTabSubmitted('Shipping')) {
                             $this->addCarriers();
@@ -240,5 +240,110 @@ class AdminProductsController extends AdminProductsControllerCore
             }
             return $object;
         }
+    }
+
+    // Nicolas MAURENT - 08.04.21 - Override ProductQuantity to add logging
+    public function ajaxProcessProductQuantity()
+    {
+        if ($this->tabAccess['edit'] === '0') {
+            return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
+        }
+        if (!Tools::getValue('actionQty')) {
+            return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
+        }
+
+        $product = new Product((int)Tools::getValue('id_product'), true);
+        switch (Tools::getValue('actionQty')) {
+            case 'depends_on_stock':
+                if (Tools::getValue('value') === false) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+                }
+                if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
+                }
+                if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+                }
+                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1 && (Pack::isPack($product->id) && !Pack::allUsesAdvancedStockManagement($product->id)
+                    && ($product->pack_stock_type == 2 || $product->pack_stock_type == 1 ||
+                        ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))))) {
+                    die(Tools::jsonEncode(array('error' => $this->l('You cannot use advanced stock management for this pack because').'<br />'.
+                        $this->l('- advanced stock management is not enabled for these products').'<br />'.
+                        $this->l('- you have chosen to decrement products quantities.'))));
+                }
+
+                StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
+                break;
+
+            case 'pack_stock_type':
+                $value = Tools::getValue('value');
+                if ($value === false) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+                }
+                if ((int)$value != 0 && (int)$value != 1
+                    && (int)$value != 2 && (int)$value != 3) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
+                }
+                if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ((int)$value == 1
+                    || (int)$value == 2 || ((int)$value == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))) {
+                    die(Tools::jsonEncode(array('error' => $this->l('You cannot use this stock management option because:').'<br />'.
+                        $this->l('- advanced stock management is not enabled for these products').'<br />'.
+                        $this->l('- advanced stock management is enabled for the pack'))));
+                }
+
+                Product::setPackStockType($product->id, $value);
+                break;
+
+            case 'out_of_stock':
+                if (Tools::getValue('value') === false) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+                }
+                if (!in_array((int)Tools::getValue('value'), array(0, 1, 2))) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
+                }
+
+                StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
+                break;
+
+            case 'set_qty':
+                if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+                }
+                if (Tools::getValue('id_product_attribute') === false) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
+                }
+
+                StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
+                Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
+                // Nicolas MAURENT - 08.04.21 - Log new quantity
+                PrestaShopLogger::addLog(sprintf($this->l('Updating stock to %d', 'AdminTab', false, false), (int)Tools::getValue('value')), 1, null, get_class($product), (int)$product->id, true, (int)$this->context->employee->id);
+
+                // Catch potential echo from modules
+                $error = ob_get_contents();
+                if (!empty($error)) {
+                    ob_end_clean();
+                    die(Tools::jsonEncode(array('error' => $error)));
+                }
+                break;
+
+            case 'advanced_stock_management' :
+                if (Tools::getValue('value') === false) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
+                }
+                if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
+                }
+                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1) {
+                    die(Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+                }
+
+                $product->setAdvancedStockManagement((int)Tools::getValue('value'));
+                if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0) {
+                    StockAvailable::setProductDependsOnStock($product->id, 0);
+                }
+                break;
+
+        }
+        die(Tools::jsonEncode(array('error' => false)));
     }
 }
