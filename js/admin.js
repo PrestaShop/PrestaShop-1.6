@@ -735,7 +735,14 @@ $(document).ready(function()
 	$(document).on('shown.bs.modal', function (e) {
 		$('select.chosen-modal').chosen();
 	})
+        // Apply chosen() when tab is used (refresh width) as explained at https://harvesthq.github.io/chosen/options.html
+        $(document).on('shown.bs.tab', function (e) {
+                $('select.chosen').each(function(k, item){
+                        $(item).chosen("destroy").chosen({disable_search_threshold: 10, search_contains: true});
+                });
+        })
 
+	
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');
 
