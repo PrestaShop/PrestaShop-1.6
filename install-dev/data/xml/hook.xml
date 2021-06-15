@@ -13,6 +13,9 @@
     <hook id="actionValidateOrder" live_edit="0">
       <name>actionValidateOrder</name><title>New orders</title><description/>
     </hook>
+    <hook id="actionValidateOrderAfter">
+      <name>actionValidateOrderAfter</name><title>After validating an order</title><description>This hook is called after validating an order by core</description>
+    </hook>
     <hook id="displayMaintenance" live_edit="0">
       <name>displayMaintenance</name><title>Maintenance Page</title><description>This hook displays new elements on the maintenance page</description>
     </hook>
