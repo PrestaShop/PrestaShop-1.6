@@ -21,6 +21,8 @@
 *  @copyright  2007-2017 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
+*
+*  Nicolas MAURENT - 18.09.21 - Template moved to orders template folder
 *}
 
 <div class="form-horizontal well">

@@ -1042,8 +1042,8 @@
 									</table>
 								</div>
 								<div class="current-edit" id="voucher_form" style="display:none;">
-									<!-- Nicolas MAURENT - 28.03.21 - Template in same folder to enable override -->
-									{include file='./_discount_form.tpl'}
+									<!-- Nicolas MAURENT - 18.09.21 - Template in orders template folder -->
+									{include file='../../_discount_form.tpl'}
 								</div>
 								{/if}
 							</div>
