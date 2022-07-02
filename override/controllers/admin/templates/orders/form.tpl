@@ -43,7 +43,7 @@
 	var currency_sign = '';
 	var currency_blank = false;
 	var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
-        
+
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
@@ -632,8 +632,8 @@
 				id_cart: id_cart,
 				id_customer: id_customer,
 				id_currency: id_currency,
-                                // Nicolas MAURENT - 02.12.18 - passing orderBy by active status as argument
-                                orderBy_active: 'DESC',
+				// Nicolas MAURENT - 02.12.18 - passing orderBy by active status as argument
+				orderBy_active: 'DESC',
 				product_search: $('#product').val()},
 			success : function(res)
 			{
@@ -1155,13 +1155,15 @@
 				<li class="active">
 					<a href="#nonOrderedCarts" data-toggle="tab">
 						<i class="icon-shopping-cart"></i>
-						{l s='Carts'}
+						{* Nicolas MAURENT - 02.07.22 - Specify that's only the last 5 carts *}
+						{l s='Carts (last 5)'}
 					</a>
 				</li>
 				<li>
 					<a href="#lastOrders" data-toggle="tab">
 						<i class="icon-credit-card"></i>
-						{l s='Orders'}
+						{* Nicolas MAURENT - 02.07.22 - Specify that's only the last 5 orders *}
+						{l s='Orders (last 5)'}
 					</a>
 				</li>
 			</ul>
