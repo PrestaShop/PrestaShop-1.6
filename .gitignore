@@ -35,6 +35,7 @@ vendor/*
 admin9757ogwpm/autoupgrade/*
 admin9757ogwpm/backups/*
 admin9757ogwpm/import/*
+admin9757ogwpm/export/*
 
 themes/*/cache/*
 admin9757ogwpm/themes/*/cache/*
