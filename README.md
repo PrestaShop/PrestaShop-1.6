@@ -1,4 +1,5 @@
-This repository has been archived, it’s no longer maintained but you still can fork it if you need it. If you look for a new version of the PrestaShop you can go to [this repository](https://github.com/PrestaShop/PrestaShop).
+### This repository has been archived, it’s no longer maintained but you still can fork it if you need it.
+If you look for a new version of the PrestaShop you can go to [this repository](https://github.com/PrestaShop/PrestaShop).
 
 About PrestaShop
 --------
